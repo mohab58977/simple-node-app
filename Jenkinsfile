@@ -52,13 +52,6 @@ pipeline {
     }
     stages {
 
-        stage('Cloning our Git') { 
-10          agent { label 'container' }
-            steps { 
-                git 'https://github.com/mohab58977/simple-node-app.git' 
-            }
-13
-        } 
         stage('Build Node App in container') {
             agent { label 'container' }
             steps {
