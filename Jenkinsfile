@@ -51,15 +51,24 @@ pipeline {
         dockerhub=credentials('dockerhub')
     }
     stages {
+
+        stage('Cloning our Git') { 
+10          agent { label 'container' }
+            steps { 
+                git 'https://github.com/mohab58977/simple-node-app.git' 
+            }
+13
+        } 
         stage('Build Node App in container') {
             agent { label 'container' }
             steps {
                sh 'echo Building..'
+               withCredentials([usernamePassword(credentialsId: 'dockerhub', passwordVariable: 'DOCKER_REGISTRY_PWD', usernameVariable: 'DOCKER_REGISTRY_USER')]) {
                sh "docker login -u $dockerhub_USR -p $dockerhub_PSW"
                sh 'docker build -t app .'
                sh 'docker tag app mohab5897/iti-lab1:v1'
                sh 'docker push mohab5897/iti-lab1:v1'
-                
+            }
             }
         }
         stage('Build Node App in instance') {
